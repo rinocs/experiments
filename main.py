@@ -1,5 +1,5 @@
 from src.trading_agent import TradingAgent
-from src.llm_interface.llm_provider import MockLLMProvider
+from src.llm_interface.llm_provider import LLMProvider
 import json
 import time
 
@@ -8,7 +8,7 @@ def main():
     Main function to run the AI trading agent.
     """
     # Initialize the LLM provider (using the mock provider for now)
-    llm_provider = MockLLMProvider()
+    llm_provider = LLMProvider(provider='mock')
 
     # Initialize the trading agent
     agent = TradingAgent(llm_provider=llm_provider)
@@ -32,20 +32,6 @@ def main():
             print("Collecting market data...")
             agent.collect_market_data(coin_id=COIN_TO_TRADE)
             print("Market data collected.")
-
-            # Optional: Display the collected data for debugging
-            # print("\\n--- Collected Market Data ---")
-            # for key, value in agent.market_data.items():
-            #     print(f"\\n--- {key.upper()} ---")
-            #     if value:
-            #         if isinstance(value, list):
-            #             for item in value[:2]: # show first 2 news items
-            #                 print(item)
-            #         else:
-            #             print(value)
-            #     else:
-            #         print("No data")
-            # print("-----------------------------\\n")
 
             # 2. Make a trading decision
             print("Making a trading decision...")

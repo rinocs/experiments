@@ -1,7 +1,7 @@
 import threading
 import json
 from src.data_collection import pivot_points, sentiment, news, technical_indicators
-from src.llm_interface.llm_provider import MockLLMProvider # Start with the mock provider
+from src.llm_interface.llm_provider import LLMProvider # Updated import
 
 class TradingAgent:
     def __init__(self, llm_provider):
@@ -92,7 +92,7 @@ Here is the current market data:
 
 if __name__ == '__main__':
     # Example usage
-    mock_llm = MockLLMProvider()
+    mock_llm = LLMProvider(provider='mock') # Using the new LLMProvider
     agent = TradingAgent(llm_provider=mock_llm)
 
     print("Collecting market data for Bitcoin...")
