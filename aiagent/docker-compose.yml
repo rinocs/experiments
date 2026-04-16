@@ -1,0 +1,46 @@
+version: "3.9"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - langfuse-server
+
+  ui:
+    build: .
+    command: streamlit run app/ui.py --server.port=8501 --server.address=0.0.0.0
+    ports:
+      - "8501:8501"
+    env_file: .env
+    depends_on:
+      - api
+
+  # ── Langfuse self-hosted ────────────────────────────────
+  langfuse-server:
+    image: langfuse/langfuse:latest
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://langfuse:langfuse@langfuse-db:5432/langfuse
+      - NEXTAUTH_SECRET=changeme
+      - SALT=changeme
+      - NEXTAUTH_URL=http://localhost:3000
+    depends_on:
+      - langfuse-db
+
+  langfuse-db:
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=langfuse
+      - POSTGRES_PASSWORD=langfuse
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse_pg:/var/lib/postgresql/data
+
+volumes:
+  langfuse_pg:
